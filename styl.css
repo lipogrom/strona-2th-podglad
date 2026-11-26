@@ -5,6 +5,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 :root {
   --kolor: #1f6f8b;
+  /* Kolor tekstu: przyciemniony kolor gabinetu, żeby napisy na białym miały kontrast min. 4,5:1 (WCAG AA)
+     także przy jasnych barwach (np. błękit #0092D8 ma tylko 3,4:1). */
+  --kolor-tekst: color-mix(in srgb, var(--kolor) 82%, #000);
   --kolor-ciemny: color-mix(in srgb, var(--kolor) 55%, #060b1c);
   --kolor-jasny: color-mix(in srgb, var(--kolor) 9%, #fff);
   --kolor-bladziutki: color-mix(in srgb, var(--kolor) 4%, #fff);
@@ -21,7 +24,7 @@ body {
   color: var(--tekst); line-height: 1.6; font-size: 17px; background: #fff;
   -webkit-font-smoothing: antialiased;
 }
-a { color: var(--kolor); }
+a { color: var(--kolor-tekst); }
 h1, h2, h3 { letter-spacing: -.015em; }
 .kontener { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 summary { cursor: pointer; }
@@ -48,15 +51,15 @@ summary { cursor: pointer; }
 .gorny-pasek-tresc { display: flex; align-items: center; gap: 28px; min-height: 68px; }
 .marka { display: flex; align-items: center; gap: 12px; color: var(--tekst); text-decoration: none; font-size: .95rem; }
 .marka img { width: 38px; height: 38px; object-fit: contain; }
-.marka strong { font-size: 1.15rem; color: var(--kolor); margin-right: 4px; }
+.marka strong { font-size: 1.15rem; color: var(--kolor-tekst); margin-right: 4px; }
 .menu { display: flex; gap: 4px; margin-left: auto; }
 .menu a {
   padding: 8px 14px; border-radius: 999px; text-decoration: none; color: var(--tekst); font-weight: 500; font-size: .95rem;
 }
-.menu a:hover { background: var(--kolor-jasny); color: var(--kolor); }
+.menu a:hover { background: var(--kolor-jasny); color: var(--kolor-tekst); }
 .menu-telefon {
   display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
-  background: var(--kolor); color: #fff; font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums;
+  background: var(--kolor-tekst); color: #fff; font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums;
 }
 
 /* Nagłówek */
@@ -65,7 +68,7 @@ summary { cursor: pointer; }
   background:
     radial-gradient(900px 420px at 88% -10%, rgba(255,255,255,.16), transparent 60%),
     radial-gradient(600px 400px at -5% 110%, rgba(255,255,255,.08), transparent 60%),
-    linear-gradient(135deg, var(--kolor), var(--kolor-ciemny));
+    linear-gradient(135deg, var(--kolor-tekst), var(--kolor-ciemny));
   padding: 72px 0 84px;
 }
 .naglowek-siatka { display: grid; grid-template-columns: 1.25fr .85fr; gap: 56px; align-items: center; }
@@ -89,8 +92,8 @@ summary { cursor: pointer; }
 }
 .przycisk:hover { transform: translateY(-1px); filter: brightness(1.06); }
 .naglowek .przycisk { color: #fff; border-color: rgba(255,255,255,.55); }
-.przycisk-glowny { background: #fff; border-color: #fff !important; color: var(--kolor) !important; }
-.przycisk-jasny { color: var(--kolor); background: #fff; border-color: var(--ramka); }
+.przycisk-glowny { background: #fff; border-color: #fff !important; color: var(--kolor-tekst) !important; }
+.przycisk-jasny { color: var(--kolor-tekst); background: #fff; border-color: var(--ramka); }
 
 /* Karta godzin w nagłówku (komputer) */
 .karta-godzin {
@@ -98,7 +101,7 @@ summary { cursor: pointer; }
   box-shadow: 0 24px 60px rgba(6, 11, 28, .28);
 }
 .karta-godzin-tytul { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 1.2rem; }
-.karta-godzin-tytul .ikona { color: var(--kolor); }
+.karta-godzin-tytul .ikona { color: var(--kolor-tekst); }
 .karta-godzin-telefon {
   display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px;
   padding: 12px; border-radius: 14px; background: var(--kolor-jasny);
@@ -111,7 +114,7 @@ summary { cursor: pointer; }
 .sekcja-naglowek { margin-bottom: 36px; }
 .etykieta {
   display: inline-flex; align-items: center; gap: 10px; margin: 0 0 8px;
-  font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--kolor);
+  font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--kolor-tekst);
 }
 .etykieta::before { content: ""; width: 24px; height: 2px; border-radius: 2px; background: currentColor; }
 h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
@@ -127,7 +130,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
 .zabieg p { margin: 8px 0 0 64px; color: var(--szary); font-size: .98rem; }
 .ikona-kolo {
   flex: none; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center;
-  background: var(--kolor-jasny); color: var(--kolor);
+  background: var(--kolor-jasny); color: var(--kolor-tekst);
 }
 .ikona-kolo .ikona { width: 26px; height: 26px; }
 
@@ -145,8 +148,8 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
 .lekarz-zdjecie { flex: none; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
 .lekarz-nazwisko { margin: 0; font-size: 1.15rem; }
 .lekarz-tytul { color: var(--szary); font-weight: 500; font-size: .95rem; }
-.lekarz-zakres { margin: 2px 0 0; color: var(--kolor); font-size: .95rem; font-weight: 600; }
-.lekarz-wiecej summary { margin-top: 8px; color: var(--kolor); font-size: .92rem; text-decoration: underline; min-height: 32px; display: inline-flex; align-items: center; }
+.lekarz-zakres { margin: 2px 0 0; color: var(--kolor-tekst); font-size: .95rem; font-weight: 600; }
+.lekarz-wiecej summary { margin-top: 8px; color: var(--kolor-tekst); font-size: .92rem; text-decoration: underline; min-height: 32px; display: inline-flex; align-items: center; }
 .lekarz-opis { margin: 10px 0 0; color: var(--szary); font-size: .96rem; }
 
 /* Wyposażenie */
@@ -155,7 +158,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
 .wyposazenie-blok > summary::-webkit-details-marker { display: none; }
 .wyposazenie { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .wyposazenie li { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid var(--ramka); border-radius: var(--promien); padding: 18px; }
-.ikona-wyposazenie { width: 30px; height: 30px; color: var(--kolor); }
+.ikona-wyposazenie { width: 30px; height: 30px; color: var(--kolor-tekst); }
 .wyposazenie strong { display: block; font-size: .98rem; }
 .wyposazenie span { display: block; color: var(--szary); font-size: .9rem; line-height: 1.45; margin-top: 2px; }
 
@@ -168,7 +171,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
 .kontakt { display: grid; grid-template-columns: 1fr 1.15fr; gap: 48px; align-items: stretch; }
 .kontakt-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
 .kontakt-lista li { display: flex; gap: 14px; align-items: flex-start; }
-.ikona-kontakt { width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: var(--kolor-jasny); color: var(--kolor); }
+.ikona-kontakt { width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: var(--kolor-jasny); color: var(--kolor-tekst); }
 .kontakt-lista li > div { padding-top: 8px; }
 .kontakt-duzy { font-size: 1.25rem; font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums; }
 .godziny-blok { margin-top: 32px; }
@@ -180,7 +183,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
 .godziny td { text-align: right; font-variant-numeric: tabular-nums; }
 .przedzial { display: block; white-space: nowrap; }
 .godziny tr.zamkniete { color: var(--szary); }
-.godziny tr.dzisiaj { color: var(--kolor); }
+.godziny tr.dzisiaj { color: var(--kolor-tekst); }
 .godziny tr.dzisiaj th, .godziny tr.dzisiaj td { font-weight: 700; }
 
 .mapa {
@@ -192,7 +195,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
     linear-gradient(90deg, color-mix(in srgb, var(--kolor) 7%, transparent) 1px, transparent 1px);
   background-size: 32px 32px;
 }
-.mapa-pinezka { width: 44px; height: 44px; color: var(--kolor); }
+.mapa-pinezka { width: 44px; height: 44px; color: var(--kolor-tekst); }
 .mapa-adres { margin: 8px 0 16px; }
 .mapa iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
@@ -214,7 +217,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
 }
 .pasek-dolny a {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px;
-  min-height: 54px; font-size: .74rem; font-weight: 600; color: var(--kolor); text-decoration: none;
+  min-height: 54px; font-size: .74rem; font-weight: 600; color: var(--kolor-tekst); text-decoration: none;
 }
 .pasek-dolny a > .ikona { width: 22px; height: 22px; }
 .pasek-dolny .pasek-telefon { font-weight: 700; }
@@ -267,7 +270,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
   .zabiegi { grid-template-columns: 1fr; }
   .zabieg { padding: 12px 0; }
   .zabieg summary { font-size: 1rem; gap: 12px; }
-  .zabieg summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; font-weight: 400; color: var(--kolor); line-height: 1; }
+  .zabieg summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; font-weight: 400; color: var(--kolor-tekst); line-height: 1; }
   .zabieg[open] summary::after { content: "–"; }
   .ikona-kolo { width: 40px; height: 40px; border-radius: 12px; }
   .ikona-kolo .ikona { width: 22px; height: 22px; }
@@ -283,7 +286,7 @@ h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
   .wyposazenie-blok { margin-top: 26px; }
   .wyposazenie-blok > summary { display: flex; align-items: center; }
   .wyposazenie-blok > summary .podtytul { margin: 0; }
-  .wyposazenie-blok > summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; color: var(--kolor); }
+  .wyposazenie-blok > summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; color: var(--kolor-tekst); }
   .wyposazenie-blok[open] > summary::after { content: "–"; }
   .wyposazenie { grid-template-columns: 1fr; gap: 10px; margin-top: 12px; }
   .wyposazenie li { padding: 14px; }
