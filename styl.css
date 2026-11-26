@@ -1,227 +1,309 @@
 /* Wspólny wygląd stron gabinetów [Claude]. Kolor przewodni ustawia plik danych (--kolor).
-   Na telefonie: zwarty nagłówek (telefon, dojazd, godziny i adres widoczne od razu), spis treści,
-   zwinięte opisy (mniej przewijania), godziny zgrupowane. Na komputerze wszystko rozwinięte. */
+   Komputer: górny pasek z menu i telefonem, nagłówek w dwóch kolumnach (opis + karta godzin),
+   sekcje z jednolitymi nagłówkami, ikony liniowe w kolorze gabinetu.
+   Telefon: zwarty nagłówek, zwinięte opisy, dolny pasek pod kciukiem z okrągłym „Umów się”. */
 *, *::before, *::after { box-sizing: border-box; }
 :root {
   --kolor: #1f6f8b;
-  --tekst: #1d2b33;
-  --szary: #5b6b74;
-  --tlo-jasne: #f3f7f8;
-  --ramka: #dde6e9;
-  --promien: 14px;
+  --kolor-ciemny: color-mix(in srgb, var(--kolor) 55%, #060b1c);
+  --kolor-jasny: color-mix(in srgb, var(--kolor) 9%, #fff);
+  --kolor-bladziutki: color-mix(in srgb, var(--kolor) 4%, #fff);
+  --tekst: #172033;
+  --szary: #5a6478;
+  --ramka: color-mix(in srgb, var(--kolor) 12%, #e6e9ef);
+  --promien: 18px;
+  --cien: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 24px rgba(16, 24, 40, .06);
 }
-html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: var(--tekst);
-  line-height: 1.6;
-  font-size: 17px;
-  background: #fff;
+  color: var(--tekst); line-height: 1.6; font-size: 17px; background: #fff;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: var(--kolor); }
-.kontener { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { letter-spacing: -.015em; }
+.kontener { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 summary { cursor: pointer; }
+.ikona { width: 1.2em; height: 1.2em; flex: none; }
+.ikona-tekst { display: inline-grid; place-items: center; font-size: 1.1em; }
 
-/* Nagłówek */
-.naglowek {
-  background:
-    radial-gradient(circle at 85% 10%, rgba(255,255,255,.18), transparent 45%),
-    linear-gradient(135deg, var(--kolor), color-mix(in srgb, var(--kolor) 60%, #0b1f28));
-  color: #fff;
-  padding: 48px 0 52px;
-}
-.naglowek-tytul { display: flex; align-items: center; gap: 18px; }
-.logo {
-  flex: none; width: 96px; height: 96px; object-fit: contain;
-  background: #fff; border-radius: 22px; padding: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.18);
-}
-.naglowek-miejsce { margin: 0; font-size: .95rem; opacity: .85; letter-spacing: .02em; }
-.naglowek h1 { margin: 6px 0 10px; font-size: clamp(2.2rem, 8vw, 4rem); line-height: 1.05; letter-spacing: -.02em; }
-.naglowek-opis { max-width: 620px; margin: 0 0 16px; font-size: 1.1rem; opacity: .95; }
-.status { display: inline-block; margin: 0 0 8px; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.14); font-size: .95rem; }
-.status.otwarte { color: #c8f7d8; }
-.status.zamkniete { color: #ffd9d0; }
-.naglowek-adres { margin: 0 0 20px; font-size: .95rem; opacity: .9; }
-
-.przyciski { display: flex; flex-wrap: wrap; gap: 12px; }
-.przycisk {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  min-height: 48px; padding: 12px 22px; border-radius: 999px;
-  font: inherit; font-weight: 600; text-decoration: none; cursor: pointer;
-  border: 2px solid currentColor; background: transparent; color: inherit;
-}
-.naglowek .przycisk { color: #fff; }
-.przycisk-glowny { background: #fff; border-color: #fff; color: var(--kolor) !important; }
-.przycisk:hover { filter: brightness(1.08); }
-
-/* Spis treści – przyklejony u góry, szybki skok do części strony */
-.spis {
-  position: sticky; top: 0; z-index: 5;
-  background: rgba(255,255,255,.96); backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--ramka);
-}
-.spis .kontener { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; padding-bottom: 8px; }
-.spis a {
-  flex: none; padding: 8px 14px; border-radius: 999px; min-height: 40px; display: inline-flex; align-items: center;
-  text-decoration: none; font-weight: 600; font-size: .95rem; color: var(--kolor);
-  background: color-mix(in srgb, var(--kolor) 8%, #fff);
-}
-
-/* Sekcje */
-.sekcja { padding: 52px 0; }
-.sekcja-jasna { background: var(--tlo-jasne); }
-h2 { margin: 0 0 20px; font-size: 1.7rem; letter-spacing: -.01em; }
-.wskazowka { margin: -10px 0 14px; color: var(--szary); font-size: .9rem; }
-
-/* Zabiegi – rozwijane karty */
-.karty { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-.karta { border: 1px solid var(--ramka); border-radius: var(--promien); background: #fff; }
-.karta summary {
-  list-style: none; display: flex; align-items: center; gap: 12px;
-  padding: 16px 18px; min-height: 56px; font-weight: 700; font-size: 1.05rem;
-}
-.karta summary::-webkit-details-marker { display: none; }
-.karta summary::after {
-  content: "+"; margin-left: auto; font-size: 1.4rem; font-weight: 400; color: var(--kolor); line-height: 1;
-}
-.karta[open] summary::after { content: "–"; }
-.karta-ikona { font-size: 1.5rem; line-height: 1; }
-.karta p { margin: 0; padding: 0 18px 16px; color: var(--szary); font-size: .97rem; }
-
-.podtytul-sekcji { margin: 32px 0 12px; font-size: 1.2rem; }
-.problemy { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.problemy li {
-  padding: 6px 13px; border-radius: 999px; font-size: .93rem;
-  background: color-mix(in srgb, var(--kolor) 8%, #fff); color: var(--tekst);
-  border: 1px solid color-mix(in srgb, var(--kolor) 20%, #fff);
-}
-
-/* Zwijany blok z nagłówkiem (np. wyposażenie) */
-.rozwijane > summary { list-style: none; display: flex; align-items: center; gap: 10px; }
-.rozwijane > summary::-webkit-details-marker { display: none; }
-.rozwijane > summary::after { content: "+"; font-size: 1.4rem; color: var(--kolor); margin-top: 20px; }
-.rozwijane[open] > summary::after { content: "–"; }
-.wyposazenie { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
-.wyposazenie li { border-left: 4px solid var(--kolor); background: var(--tlo-jasne); padding: 10px 14px; border-radius: 0 var(--promien) var(--promien) 0; color: var(--szary); font-size: .95rem; }
-.wyposazenie strong { color: var(--tekst); }
-
-/* Lekarze */
-.lekarze { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.lekarz { display: flex; align-items: flex-start; gap: 14px; background: #fff; border: 1px solid var(--ramka); border-radius: var(--promien); padding: 16px 18px; }
-.lekarz-inicjaly {
-  flex: none; width: 48px; height: 48px; border-radius: 50%;
-  display: grid; place-items: center; font-weight: 700;
-  background: color-mix(in srgb, var(--kolor) 14%, #fff); color: var(--kolor);
-}
-.lekarz-zdjecie { flex: none; width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
-.lekarz-zakres { color: var(--kolor); font-size: .95rem; font-weight: 600; }
-.lekarz-wiecej summary { margin-top: 6px; color: var(--kolor); font-size: .92rem; text-decoration: underline; min-height: 32px; display: inline-flex; align-items: center; }
-.lekarz-opis { margin: 6px 0 0; color: var(--szary); font-size: .95rem; }
-
-.galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.galeria figure { margin: 0; }
-.galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--promien); display: block; }
-.galeria figcaption { font-size: .9rem; color: var(--szary); margin-top: 6px; }
-
-/* Kontakt */
-.kontakt { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
-.godziny { width: 100%; border-collapse: collapse; }
-.godziny th, .godziny td { text-align: left; padding: 9px 4px; border-bottom: 1px solid var(--ramka); font-weight: 400; vertical-align: top; }
-.godziny th { white-space: nowrap; padding-right: 12px; }
-.godziny td { text-align: right; font-variant-numeric: tabular-nums; }
-.przedzial { display: block; white-space: nowrap; }
-.godziny tr.zamkniete { color: var(--szary); }
-.godziny tr.dzisiaj { font-weight: 700; color: var(--kolor); }
-.godziny tr.dzisiaj th { font-weight: 700; }
-.drobne { color: var(--szary); font-size: .9rem; }
-.adres { margin-top: 0; }
-.kontakt-linie { display: flex; flex-direction: column; gap: 8px; }
-.udogodnienia { margin: 10px 0 0; padding-left: 20px; color: var(--szary); font-size: .95rem; }
-.mapa {
-  margin-top: 16px; border-radius: var(--promien); overflow: hidden;
-  background: var(--tlo-jasne); border: 1px solid var(--ramka);
-  min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px;
-}
-.mapa .przycisk { color: var(--kolor); }
-.mapa iframe { width: 100%; height: 320px; border: 0; display: block; }
-.mapa:has(iframe) { padding: 0; }
-
-.stopka { background: #0f2630; color: #c6d3d8; padding: 26px 0 90px; font-size: .9rem; }
-.stopka p { margin: 0; }
-.prywatnosc { margin-top: 12px; }
-.prywatnosc summary { text-decoration: underline; }
-.prywatnosc p { max-width: 760px; margin: 8px 0 0; line-height: 1.5; }
-
-/* Wersja robocza (podgląd do akceptacji) */
+/* Wersja robocza i ogłoszenia */
 .podglad-baner {
   padding: 6px 16px; text-align: center; font-size: .85rem; font-weight: 700; letter-spacing: .03em;
   background: repeating-linear-gradient(135deg, #ffe08a 0 12px, #ffd45c 12px 24px); color: #4a3800;
 }
-
-/* Ogłoszenia (przerwa świąteczna, urlop, życzenia) – pasek nad nagłówkiem */
 .komunikaty:not(:has(.komunikat:not([hidden]))) { display: none; }
 .komunikat {
   margin: 0; padding: 12px 20px; text-align: center; font-weight: 600;
   background: #fff4d6; color: #5a4300; border-bottom: 1px solid #f0dc9c;
 }
 
-/* Dolny pasek – tylko na telefonach, zawsze widoczny, w zasięgu kciuka.
-   Cztery skróty do części strony, a pośrodku okrągły przycisk ze słuchawką „Umów się”. */
+/* Górny pasek (komputer) */
+.gorny-pasek {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(255,255,255,.94); backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--ramka);
+}
+.gorny-pasek-tresc { display: flex; align-items: center; gap: 28px; min-height: 68px; }
+.marka { display: flex; align-items: center; gap: 12px; color: var(--tekst); text-decoration: none; font-size: .95rem; }
+.marka img { width: 38px; height: 38px; object-fit: contain; }
+.marka strong { font-size: 1.15rem; color: var(--kolor); margin-right: 4px; }
+.menu { display: flex; gap: 4px; margin-left: auto; }
+.menu a {
+  padding: 8px 14px; border-radius: 999px; text-decoration: none; color: var(--tekst); font-weight: 500; font-size: .95rem;
+}
+.menu a:hover { background: var(--kolor-jasny); color: var(--kolor); }
+.menu-telefon {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px;
+  background: var(--kolor); color: #fff; font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums;
+}
+
+/* Nagłówek */
+.naglowek {
+  position: relative; overflow: hidden; color: #fff;
+  background:
+    radial-gradient(900px 420px at 88% -10%, rgba(255,255,255,.16), transparent 60%),
+    radial-gradient(600px 400px at -5% 110%, rgba(255,255,255,.08), transparent 60%),
+    linear-gradient(135deg, var(--kolor), var(--kolor-ciemny));
+  padding: 72px 0 84px;
+}
+.naglowek-siatka { display: grid; grid-template-columns: 1.25fr .85fr; gap: 56px; align-items: center; }
+.naglowek-tytul { display: flex; align-items: center; gap: 18px; }
+.logo { flex: none; width: 96px; height: 96px; object-fit: contain; background: #fff; border-radius: 22px; padding: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+.naglowek-miejsce { margin: 0; font-size: .95rem; opacity: .85; letter-spacing: .03em; }
+.naglowek h1 { margin: 6px 0 14px; font-size: clamp(2.2rem, 6vw, 4.2rem); line-height: 1.02; letter-spacing: -.03em; }
+.naglowek-opis { max-width: 560px; margin: 0 0 22px; font-size: 1.15rem; line-height: 1.55; opacity: .95; }
+.status { display: inline-block; margin: 0 0 10px; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.14); font-size: .95rem; }
+.status.otwarte { color: #c8f7d8; }
+.status.zamkniete { color: #ffd9d0; }
+.naglowek-adres { display: flex; align-items: center; gap: 8px; margin: 0 0 26px; font-size: .98rem; opacity: .92; }
+
+.przyciski { display: flex; flex-wrap: wrap; gap: 12px; }
+.przycisk {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 50px; padding: 12px 24px; border-radius: 999px;
+  font: inherit; font-weight: 650; text-decoration: none; cursor: pointer;
+  border: 2px solid currentColor; background: transparent; color: inherit;
+  transition: transform .15s ease, filter .15s ease;
+}
+.przycisk:hover { transform: translateY(-1px); filter: brightness(1.06); }
+.naglowek .przycisk { color: #fff; border-color: rgba(255,255,255,.55); }
+.przycisk-glowny { background: #fff; border-color: #fff !important; color: var(--kolor) !important; }
+.przycisk-jasny { color: var(--kolor); background: #fff; border-color: var(--ramka); }
+
+/* Karta godzin w nagłówku (komputer) */
+.karta-godzin {
+  background: #fff; color: var(--tekst); border-radius: 24px; padding: 28px 30px 24px;
+  box-shadow: 0 24px 60px rgba(6, 11, 28, .28);
+}
+.karta-godzin-tytul { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: 1.2rem; }
+.karta-godzin-tytul .ikona { color: var(--kolor); }
+.karta-godzin-telefon {
+  display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px;
+  padding: 12px; border-radius: 14px; background: var(--kolor-jasny);
+  font-weight: 700; font-size: 1.1rem; text-decoration: none; font-variant-numeric: tabular-nums;
+}
+
+/* Sekcje – jednolite nagłówki */
+.sekcja { padding: 88px 0; }
+.sekcja-jasna { background: var(--kolor-bladziutki); border-top: 1px solid var(--ramka); border-bottom: 1px solid var(--ramka); }
+.sekcja-naglowek { margin-bottom: 36px; }
+.etykieta {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 8px;
+  font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--kolor);
+}
+.etykieta::before { content: ""; width: 24px; height: 2px; border-radius: 2px; background: currentColor; }
+h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; }
+.podtytul { margin: 0 0 14px; font-size: 1.15rem; }
+.wskazowka { margin: 6px 0 0; color: var(--szary); font-size: .9rem; }
+.drobne { color: var(--szary); font-size: .9rem; margin: 10px 0 0; }
+
+/* Zabiegi – lista w dwóch kolumnach */
+.zabiegi { display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; }
+.zabieg { border-bottom: 1px solid var(--ramka); padding: 22px 0; }
+.zabieg summary { list-style: none; display: flex; align-items: center; gap: 16px; font-weight: 700; font-size: 1.1rem; }
+.zabieg summary::-webkit-details-marker { display: none; }
+.zabieg p { margin: 8px 0 0 64px; color: var(--szary); font-size: .98rem; }
+.ikona-kolo {
+  flex: none; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center;
+  background: var(--kolor-jasny); color: var(--kolor);
+}
+.ikona-kolo .ikona { width: 26px; height: 26px; }
+
+.problemy-blok { margin-top: 44px; padding: 26px 28px; border-radius: var(--promien); background: var(--kolor-bladziutki); border: 1px solid var(--ramka); }
+.problemy { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.problemy li { padding: 7px 14px; border-radius: 999px; font-size: .93rem; background: #fff; border: 1px solid var(--ramka); }
+
+/* Lekarze */
+.lekarze { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.lekarz { display: flex; align-items: flex-start; gap: 18px; background: #fff; border: 1px solid var(--ramka); border-radius: var(--promien); padding: 26px; box-shadow: var(--cien); }
+.lekarz-inicjaly {
+  flex: none; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 700; font-size: 1.1rem; color: #fff; background: linear-gradient(135deg, var(--kolor), var(--kolor-ciemny));
+}
+.lekarz-zdjecie { flex: none; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; }
+.lekarz-nazwisko { margin: 0; font-size: 1.15rem; }
+.lekarz-tytul { color: var(--szary); font-weight: 500; font-size: .95rem; }
+.lekarz-zakres { margin: 2px 0 0; color: var(--kolor); font-size: .95rem; font-weight: 600; }
+.lekarz-wiecej summary { margin-top: 8px; color: var(--kolor); font-size: .92rem; text-decoration: underline; min-height: 32px; display: inline-flex; align-items: center; }
+.lekarz-opis { margin: 10px 0 0; color: var(--szary); font-size: .96rem; }
+
+/* Wyposażenie */
+.wyposazenie-blok { margin-top: 52px; }
+.wyposazenie-blok > summary { list-style: none; }
+.wyposazenie-blok > summary::-webkit-details-marker { display: none; }
+.wyposazenie { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.wyposazenie li { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid var(--ramka); border-radius: var(--promien); padding: 18px; }
+.ikona-wyposazenie { width: 30px; height: 30px; color: var(--kolor); }
+.wyposazenie strong { display: block; font-size: .98rem; }
+.wyposazenie span { display: block; color: var(--szary); font-size: .9rem; line-height: 1.45; margin-top: 2px; }
+
+.galeria { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.galeria figure { margin: 0; }
+.galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--promien); display: block; }
+.galeria figcaption { font-size: .9rem; color: var(--szary); margin-top: 6px; }
+
+/* Kontakt */
+.kontakt { display: grid; grid-template-columns: 1fr 1.15fr; gap: 48px; align-items: stretch; }
+.kontakt-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+.kontakt-lista li { display: flex; gap: 14px; align-items: flex-start; }
+.ikona-kontakt { width: 40px; height: 40px; padding: 9px; border-radius: 12px; background: var(--kolor-jasny); color: var(--kolor); }
+.kontakt-lista li > div { padding-top: 8px; }
+.kontakt-duzy { font-size: 1.25rem; font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums; }
+.godziny-blok { margin-top: 32px; }
+
+.godziny { width: 100%; border-collapse: collapse; }
+.godziny th, .godziny td { text-align: left; padding: 10px 2px; border-bottom: 1px solid var(--ramka); font-weight: 400; vertical-align: top; }
+.godziny tr:last-child th, .godziny tr:last-child td { border-bottom: 0; }
+.godziny th { white-space: nowrap; padding-right: 12px; }
+.godziny td { text-align: right; font-variant-numeric: tabular-nums; }
+.przedzial { display: block; white-space: nowrap; }
+.godziny tr.zamkniete { color: var(--szary); }
+.godziny tr.dzisiaj { color: var(--kolor); }
+.godziny tr.dzisiaj th, .godziny tr.dzisiaj td { font-weight: 700; }
+
+.mapa {
+  position: relative; min-height: 380px; border-radius: 24px; overflow: hidden; border: 1px solid var(--ramka);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;
+  background-color: var(--kolor-bladziutki);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--kolor) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--kolor) 7%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.mapa-pinezka { width: 44px; height: 44px; color: var(--kolor); }
+.mapa-adres { margin: 8px 0 16px; }
+.mapa iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* Stopka */
+.stopka { background: var(--kolor-ciemny); color: rgba(255,255,255,.78); padding: 36px 0; font-size: .9rem; }
+.stopka-tresc { display: flex; gap: 24px; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; }
+.stopka-marka { display: flex; gap: 14px; align-items: center; margin: 0; }
+.stopka-marka img { width: 40px; height: 40px; object-fit: contain; background: #fff; border-radius: 10px; padding: 4px; }
+.prywatnosc summary { text-decoration: underline; }
+.prywatnosc p { max-width: 560px; margin: 8px 0 0; line-height: 1.5; }
+
+/* Dolny pasek – tylko na telefonach */
 .pasek-dolny {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
   display: none; align-items: flex-end;
   padding: 4px 6px calc(4px + env(safe-area-inset-bottom));
-  background: rgba(255,255,255,.97); backdrop-filter: blur(6px);
-  border-top: 1px solid var(--ramka); box-shadow: 0 -6px 20px rgba(0,0,0,.10);
+  background: rgba(255,255,255,.97); backdrop-filter: blur(8px);
+  border-top: 1px solid var(--ramka); box-shadow: 0 -6px 20px rgba(0,0,0,.08);
 }
 .pasek-dolny a {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 1px;
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px;
   min-height: 54px; font-size: .74rem; font-weight: 600; color: var(--kolor); text-decoration: none;
 }
-.pasek-dolny a > span { font-size: 1.2rem; line-height: 1.15; }
+.pasek-dolny a > .ikona { width: 22px; height: 22px; }
 .pasek-dolny .pasek-telefon { font-weight: 700; }
 .pasek-dolny .kolko {
-  width: 62px; height: 62px; margin-top: -26px; margin-bottom: 2px;
+  width: 62px; height: 62px; margin-top: -26px; margin-bottom: 0;
   display: grid; place-items: center; border-radius: 50%;
   background: var(--kolor); color: #fff; border: 4px solid #fff;
   box-shadow: 0 6px 16px color-mix(in srgb, var(--kolor) 45%, transparent);
 }
 
-.tylko-waski { display: none; }
+/* ---------- Komputer ---------- */
+@media (min-width: 761px) {
+  .tylko-waski { display: none !important; }
+  .naglowek .logo { display: none; }
+  .zabieg summary, .wyposazenie-blok > summary { cursor: default; pointer-events: none; }
+  .lekarz-wiecej > summary { display: none; }
+  .przycisk-glowny { gap: 6px; }
+}
 
+/* ---------- Tablet ---------- */
+@media (max-width: 980px) and (min-width: 761px) {
+  .menu { display: none; }
+  .naglowek-siatka { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+
+/* ---------- Telefon ---------- */
 @media (max-width: 760px) {
   body { font-size: 16px; }
-  .naglowek { padding: 22px 0 24px; }
+  html { scroll-padding-top: 12px; }
+  .tylko-szeroki { display: none !important; }
+  .gorny-pasek { display: none; }
+  .kontener { padding: 0 18px; }
+
+  .naglowek { padding: 22px 0 26px; }
+  .naglowek-siatka { grid-template-columns: 1fr; gap: 0; }
   .naglowek-tytul { gap: 14px; }
   .logo { width: 60px; height: 60px; border-radius: 14px; padding: 6px; }
   .naglowek h1 { margin: 2px 0 4px; font-size: 2.1rem; }
   .naglowek-miejsce { font-size: .85rem; }
   .naglowek-opis { font-size: .98rem; margin: 12px 0 12px; }
-  .naglowek-adres { margin-bottom: 14px; }
+  .naglowek-adres { margin-bottom: 16px; font-size: .92rem; }
   .przyciski { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .przycisk { padding: 12px 10px; }
   .przycisk-szeroki { grid-column: 1 / -1; }
-  .tylko-szeroki { display: none; }
-  .tylko-waski { display: block; }
 
-  .sekcja { padding: 32px 0; }
-  h2 { font-size: 1.45rem; margin-bottom: 16px; }
-  .karty { gap: 8px; }
-  .karta summary { padding: 12px 14px; min-height: 52px; font-size: 1rem; }
-  .karta p { padding: 0 14px 14px; }
-  .podtytul-sekcji { margin: 24px 0 10px; font-size: 1.1rem; }
+  .sekcja { padding: 36px 0; }
+  .sekcja-naglowek { margin-bottom: 18px; }
+  .etykieta { font-size: .72rem; margin-bottom: 4px; }
 
-  .kontakt { grid-template-columns: 1fr; gap: 28px; }
+  .zabiegi { grid-template-columns: 1fr; }
+  .zabieg { padding: 12px 0; }
+  .zabieg summary { font-size: 1rem; gap: 12px; }
+  .zabieg summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; font-weight: 400; color: var(--kolor); line-height: 1; }
+  .zabieg[open] summary::after { content: "–"; }
+  .ikona-kolo { width: 40px; height: 40px; border-radius: 12px; }
+  .ikona-kolo .ikona { width: 22px; height: 22px; }
+  .zabieg p { margin: 8px 0 4px 52px; font-size: .95rem; }
+
+  .problemy-blok { margin-top: 26px; padding: 18px; }
+  .problemy li { font-size: .9rem; padding: 6px 12px; }
+
+  .lekarze { grid-template-columns: 1fr; gap: 12px; }
+  .lekarz { padding: 18px; gap: 14px; }
+  .lekarz-inicjaly { width: 48px; height: 48px; font-size: 1rem; }
+
+  .wyposazenie-blok { margin-top: 26px; }
+  .wyposazenie-blok > summary { display: flex; align-items: center; }
+  .wyposazenie-blok > summary .podtytul { margin: 0; }
+  .wyposazenie-blok > summary::after { content: "+"; margin-left: auto; font-size: 1.5rem; color: var(--kolor); }
+  .wyposazenie-blok[open] > summary::after { content: "–"; }
+  .wyposazenie { grid-template-columns: 1fr; gap: 10px; margin-top: 12px; }
+  .wyposazenie li { padding: 14px; }
+
+  .kontakt { grid-template-columns: 1fr; gap: 22px; }
+  .kontakt-lista { gap: 10px; }
+  .ikona-kontakt { width: 34px; height: 34px; padding: 7px; border-radius: 10px; }
+  .kontakt-lista li > div { padding-top: 5px; }
+  .kontakt-duzy { font-size: 1.15rem; }
+  .godziny-blok { margin-top: 24px; }
+  .godziny th, .godziny td { padding: 8px 2px; }
+  .mapa { min-height: 170px; border-radius: var(--promien); padding: 16px; }
+  .mapa-pinezka { width: 32px; height: 32px; }
+  .mapa-adres { margin: 4px 0 10px; }
+  .mapa .drobne { display: none; }
+  .lekarz-wiecej summary { margin-top: 4px; min-height: 28px; }
+  .stopka-tresc { gap: 12px; }
+  .mapa iframe { position: static; height: 320px; }
+  .mapa:has(iframe) { padding: 0; }
+
+  .stopka { padding: 28px 0 110px; }
   .pasek-dolny { display: flex; }
-  .stopka { padding-bottom: 110px; }
-  /* Na telefonie spis treści jest w dolnym pasku, więc górny znika. */
-  html { scroll-padding-top: 12px; }
-  .spis { display: none; }
-}
-@media (min-width: 761px) {
-  .stopka { padding-bottom: 26px; }
-  .karta summary { cursor: default; pointer-events: none; }
-  .karta summary::after { display: none; }
 }
